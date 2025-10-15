@@ -10,32 +10,25 @@ namespace TestandoAtualizaoAutomaticaViaGit
         [STAThread]
         static void Main(string[] args)
         {
-            ApplicationConfiguration.Initialize();
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+            string updaterPath = Path.Combine(appDir, "UpdaterInitialization.exe");
 
-            // Se N�O recebeu --no-updater, chama o updater
-            if (!args.Contains("--no-updater"))
+            if (File.Exists(updaterPath))
             {
-                string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                string updaterPath = Path.Combine(appDir, "UpdaterUI.exe");
-
-                if (File.Exists(updaterPath))
+                var psi = new ProcessStartInfo
                 {
-                    try
-                    {
-                        var psi = new ProcessStartInfo
-                        {
-                            FileName = updaterPath,
-                            Arguments = "--update-only", // sinaliza que veio do app principal
-                            UseShellExecute = true,
-                            WorkingDirectory = appDir
-                        };
-                        Process.Start(psi); // dispara o updater e N�O espera
-                    }
-                    catch { }
-                }
+                    FileName = updaterPath,
+                    Arguments = "--update-only",
+                    UseShellExecute = true,
+                    WorkingDirectory = appDir
+                };
+
+                var updaterProcess = Process.Start(psi);
+                updaterProcess?.WaitForExit(); // Espera updater finalizar
             }
 
-            // Abre o app principal
+            // Agora abre o app principal
+            ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
     }
