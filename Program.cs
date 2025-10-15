@@ -1,4 +1,4 @@
-using System.Diagnostics;
+ï»¿using System.Diagnostics;
 
 namespace TestandoAtualizaoAutomaticaViaGit
 {
@@ -8,46 +8,34 @@ namespace TestandoAtualizaoAutomaticaViaGit
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            try
+            ApplicationConfiguration.Initialize();
+
+            // Se Nï¿½O recebeu --no-updater, chama o updater
+            if (!args.Contains("--no-updater"))
             {
-                string appDir = AppContext.BaseDirectory;
-                string updaterPath = Path.Combine(appDir, "UpdaterInitialization.exe");
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string updaterPath = Path.Combine(appDir, "UpdaterUI.exe");
 
                 if (File.Exists(updaterPath))
                 {
-                    // Verifica se já não tem outro updater rodando
-                    bool isUpdaterRunning = Process.GetProcessesByName(
-                        Path.GetFileNameWithoutExtension(updaterPath)
-                    ).Any();
-
-                    if (!isUpdaterRunning)
+                    try
                     {
-                        Console.WriteLine("[App] Iniciando Updater...");
-                        Process.Start(new ProcessStartInfo
+                        var psi = new ProcessStartInfo
                         {
                             FileName = updaterPath,
-                            WorkingDirectory = appDir,
-                            UseShellExecute = true
-                        });
+                            Arguments = "--update-only", // sinaliza que veio do app principal
+                            UseShellExecute = true,
+                            WorkingDirectory = appDir
+                        };
+                        Process.Start(psi); // dispara o updater e Nï¿½O espera
                     }
-                    else
-                    {
-                        Console.WriteLine("[App] Updater já está em execução.");
-                    }
+                    catch { }
                 }
-                else
-                {
-                    Console.WriteLine("[App] Updater não encontrado!");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[App] Falha ao iniciar o Updater: {ex.Message}");
             }
 
-            ApplicationConfiguration.Initialize();
+            // Abre o app principal
             Application.Run(new Form1());
         }
     }
