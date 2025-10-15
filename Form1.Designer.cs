@@ -41,7 +41,7 @@
             label1.Name = "label1";
             label1.Size = new Size(316, 72);
             label1.TabIndex = 0;
-            label1.Text = "Versão 2.0.1";
+            label1.Text = "Versão 2.2.5";
             // 
             // button1
             // 
