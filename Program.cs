@@ -13,25 +13,29 @@ namespace TestandoAtualizaoAutomaticaViaGit
             string appDir = AppDomain.CurrentDomain.BaseDirectory;
             string updaterPath = Path.Combine(appDir, "UpdaterInitialization.exe");
 
+            // Se existir o Updater, inicia ele e encerra o app atual
             if (File.Exists(updaterPath))
             {
-                var psi = new ProcessStartInfo
+                try
                 {
-                    FileName = updaterPath,
-                    Arguments = "--update-only",
-                    UseShellExecute = true,
-                    WorkingDirectory = appDir
-                };
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = updaterPath,
+                        WorkingDirectory = appDir,
+                        UseShellExecute = true,
+                        Arguments = $"--check-update \"{Process.GetCurrentProcess().ProcessName}.exe\""
+                    };
 
-                var updaterProcess = Process.Start(psi);
-                updaterProcess?.WaitForExit(); // Espera updater finalizar
-
-                ApplicationConfiguration.Initialize();
-                Application.Run(new Form1());
-                return;
+                    Process.Start(psi);
+                    return; // encerra o app principal enquanto o updater roda
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Falha ao iniciar o updater: {ex.Message}");
+                }
             }
 
-            // Agora abre o app principal
+            // Se não tiver updater, apenas abre o app
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
