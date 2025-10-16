@@ -25,6 +25,10 @@ namespace TestandoAtualizaoAutomaticaViaGit
 
                 var updaterProcess = Process.Start(psi);
                 updaterProcess?.WaitForExit(); // Espera updater finalizar
+
+                ApplicationConfiguration.Initialize();
+                Application.Run(new Form1());
+                return;
             }
 
             // Agora abre o app principal
