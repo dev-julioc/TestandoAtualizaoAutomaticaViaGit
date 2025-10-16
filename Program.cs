@@ -10,33 +10,32 @@ namespace TestandoAtualizaoAutomaticaViaGit
         [STAThread]
         static void Main(string[] args)
         {
-            string appDir = AppDomain.CurrentDomain.BaseDirectory;
-            string updaterPath = Path.Combine(appDir, "UpdaterInitialization.exe");
+            ApplicationConfiguration.Initialize();
 
-            // Se existir o Updater, inicia ele e encerra o app atual
-            if (File.Exists(updaterPath))
+            if (!args.Contains("--no-updater"))
             {
-                try
-                {
-                    var psi = new ProcessStartInfo
-                    {
-                        FileName = updaterPath,
-                        WorkingDirectory = appDir,
-                        UseShellExecute = true,
-                        Arguments = $"--check-update \"{Process.GetCurrentProcess().ProcessName}.exe\""
-                    };
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string updaterPath = Path.Combine(appDir, "UpdaterInitialization.exe");
 
-                    Process.Start(psi);
-                    return; // encerra o app principal enquanto o updater roda
-                }
-                catch (Exception ex)
+                if (File.Exists(updaterPath))
                 {
-                    MessageBox.Show($"Falha ao iniciar o updater: {ex.Message}");
+                    try
+                    {
+                        var psi = new ProcessStartInfo
+                        {
+                            FileName = updaterPath,
+                            Arguments = "",
+                            UseShellExecute = true,
+                            WorkingDirectory = appDir
+                        };
+                        Process.Start(psi);
+                        return;
+                    }
+                    catch { }
                 }
             }
 
-            // Se não tiver updater, apenas abre o app
-            ApplicationConfiguration.Initialize();
+            // Abre o app principal
             Application.Run(new Form1());
         }
     }
