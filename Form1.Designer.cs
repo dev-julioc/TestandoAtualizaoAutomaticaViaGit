@@ -41,11 +41,11 @@
             label1.Name = "label1";
             label1.Size = new Size(316, 72);
             label1.TabIndex = 0;
-            label1.Text = "Versão 1.0.0";
+            label1.Text = "Versão 2.0.0";
             // 
             // button1
             // 
-            button1.Location = new Point(80, 290);
+            button1.Location = new Point(304, 319);
             button1.Name = "button1";
             button1.Size = new Size(192, 74);
             button1.TabIndex = 1;
@@ -54,7 +54,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(326, 290);
+            button2.Location = new Point(304, 214);
             button2.Name = "button2";
             button2.Size = new Size(192, 74);
             button2.TabIndex = 2;
